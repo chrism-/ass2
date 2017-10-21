@@ -68,7 +68,7 @@ public class Game extends JFrame implements GLEventListener{
      * @throws FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException {
-        Terrain terrain = LevelIO.load(new File(args[0]));
+        Terrain terrain = LevelIO.load(new File("test1.txt"));
         Game game = new Game(terrain);
         game.run();
     }
@@ -80,16 +80,8 @@ public class Game extends JFrame implements GLEventListener{
     	
 		GL2 gl = drawable.getGL().getGL2();
 		
-		//gl.glEnable(GL2.GL_DEPTH_TEST);
-		
-//		gl.glEnable(GL2.GL_CULL_FACE);
-//		gl.glCullFace(GL2.GL_BACK);
-		
 		gl.glClearColor(0, 0, 0, 1);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        
-        //gl.glShadeModel( GL2.GL_SMOOTH); 
-        //gl.glUseProgram(shaderprogram);
     	
     	//set the camera
     	gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -129,45 +121,10 @@ public class Game extends JFrame implements GLEventListener{
         s[3] = 1.0f;
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, s, 0);
 
-    	
-
-		
-		//gl.glPolygonMode(GL2.GL_FRONT_AND_BACK,GL2.GL_LINE);
 		
 		gl.glColor3d(0, 0, 1);
-		
-		
-//		gl.glMatrixMode(GL2.GL_MODELVIEW);
-//		gl.glLoadIdentity();
-		
-//		gl.glBegin(GL2.GL_TRIANGLES);
-//		
-//		
-//		gl.glVertex3d( 0.5, 0.5, 0 );
-//		
-//		gl.glVertex3d( 0, 0, 0 );
-//		
-//		gl.glVertex3d( 0.5, 0, 0 );
-//		gl.glEnd();
-		
-		//gl.glUseProgram(shaderprogram);
-					
-	    for (int x=0; x < myTerrain.size().width; x++) {
-			gl.glBegin(GL2.GL_TRIANGLE_STRIP);
-			for (int z=0; z < myTerrain.size().height; z++) {
-				
-				//TODO: set normal
-				gl.glVertex3d( x+1, myTerrain.getGridAltitude(x, z), z);
-				gl.glVertex3d( x,   myTerrain.getGridAltitude(x, z), z);
-				
-//				System.out.println("x " + x );
-//				System.out.println("y " + y );
-//				System.out.println("z " + myTerrain.altitude(((int) x), ((int) y)) );
-			}
-			gl.glEnd();
-		}
+		myTerrain.draw(gl);
 
-	    //gl.glPolygonMode(GL2.GL_FRONT_AND_BACK,GL2.GL_FILL);
 	}
 
 	@Override
