@@ -1,14 +1,19 @@
 
 package ass2.spec;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.glu.GLUquadric;
+import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -207,26 +212,59 @@ public class Terrain {
 	    
 	    return product;
 	  }
+  
+	private double SunPosCalc() {
+		Calendar calendar = Calendar.getInstance();	
+		double min = 180*(calendar.get(Calendar.SECOND)*1000) /60000.0;		
+		min = (float) Math.toRadians(min);
+		System.out.println("min = " + min);
+		return min;
+	}
 	  
   
   public void draw(GL2 gl, Texture terrain, Texture treeTrunk, Texture treeLeaves) {
-    gl.glPushMatrix();
+  	GLU glu = new GLU();
+  	gl.glMatrixMode(GL2.GL_MODELVIEW);
+	gl.glPushMatrix();
     gl.glPushAttrib(GL2.GL_LIGHTING);
     
     gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+    
+	float calcColour = (float) Math.sin(SunPosCalc());
+	float calcPosition = (float) (-Math.cos(SunPosCalc()));
+    float[] amb = {0.2f, 0.2f, 0.2f, 1f};
+    float[] spec = {0.8f, 0.8f, 0.8f, 1f}; 
+    float[] colourOfsun = {1.0f,(float) (0.45+(calcColour*0.55)),1.0f,1.0f};   
+    float[] sunPos = {(float) (calcPosition*mySize.getWidth()),calcColour*5,(float)(mySize.getHeight()/2)};
+    if(calcColour < 0.5){
+    	colourOfsun[2] = 0.0f;
+    }
+    
+	gl.glDisable(GL2.GL_LIGHT1);
+	gl.glDisable(GL2.GL_LIGHT2);
+	gl.glEnable(GL2.GL_LIGHT0);
+    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, sunPos, 0);  
+    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, amb, 0);
+    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, colourOfsun, 0);
+    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, spec, 0);
+    
+    gl.glPushMatrix();  
+    gl.glTranslatef(sunPos[0], sunPos[1], sunPos[2]);
+    gl.glEnable(GL2.GL_TEXTURE_GEN_S); 
+    gl.glEnable(GL2.GL_TEXTURE_GEN_T);
+    gl.glBindTexture(GL.GL_TEXTURE_2D, 6);
+    GLUquadric gluQ = glu.gluNewQuadric();
+    glu.gluQuadricTexture(gluQ, true);
+    glu.gluQuadricNormals(gluQ, GLU.GLU_SMOOTH);
+    glu.gluSphere(gluQ, 0.25f, 60, 60);
+    gl.glDisable(GL2.GL_TEXTURE_GEN_S); 
+    gl.glDisable(GL2.GL_TEXTURE_GEN_T);
+    gl.glPopMatrix();
     
     Texture myTerrain = terrain;
     myTerrain.enable(gl);
     myTerrain.bind(gl);
     TextureCoords textureCoords = myTerrain.getImageTexCoords();
-    
-    float[] amb = {0.2f, 0.25f, 0.2f, 1.0f};
-    float[] spec = {0.0f, 0.0f, 0.0f, 1.0f};
-    gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, amb, 0);
-    gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, spec, 0);
-    
-    float[] dif = {0.2f, 0.6f, 0.3f, 1.0f};
-    gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, dif, 0);
     
     int height = mySize.height;
     int width = mySize.width;
