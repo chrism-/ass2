@@ -106,7 +106,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	//System.out.println(cameraAngle);
     	
     	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
-    	System.out.println(	myTerrain.altitude(3, 3));
+    	System.out.println(	myTerrain.altitude(4.0, 4.0));
     	gl.glTranslated(-3,  -myTerrain.altitude(3, 3), -3);
     	//gl.glTranslated(-playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z), -playerPos.z);
     	//gl.glTranslatef(-position.x, -position.y, -position.z);
@@ -119,7 +119,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glRotated(0, 1, 0, 0);
         gl.glRotated(0, 0, 1, 0);
       
-       
+        
         float[] pos = new float[] { 10.0f, 10.0f, 10.0f, 1.0f };
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, pos, 0);
         gl.glPopMatrix();
