@@ -3,9 +3,7 @@ package ass2.spec;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureCoords;
 
 /**
  * COMMENT: Comment Tree 
@@ -33,11 +31,6 @@ public class Tree {
     gl.glPushAttrib(GL2.GL_LIGHTING);
   
     GLU glu = new GLU();
-    GLUT glut = new GLUT();
-    
-    double x = myPos[0];
-    double y = myPos[1];
-    double z = myPos[2];
     
     gl.glPushMatrix();
     {
@@ -54,15 +47,14 @@ public class Tree {
       myTreeTrunk.enable(gl);
       myTreeTrunk.bind(gl);
       
-      gl.glTranslated(x, y - 0.25, z);
-      gl.glRotated(-90.0, 1, 0, 0);
-      glut.glutSolidCylinder(0.1,0.7,20,20);      
-      /**GLUquadric gluQuadratic = glu.gluNewQuadric();
-      glu.gluQuadricTexture(gluQuadratic, true);
-      glu.gluQuadricNormals(gluQuadratic, GLU.GLU_SMOOTH);
-      glu.gluCylinder(gluQuadratic, 0.05f, 0.05f, 0.8f, 60, 60);**/
+      gl.glTranslated(this.myPos[0], this.myPos[1], this.myPos[2]);
+      gl.glRotated(-90.0, 1, 0, 0);    
+      GLUquadric gluQ = glu.gluNewQuadric();
+     
+      glu.gluQuadricTexture(gluQ, true);
+      glu.gluQuadricNormals(gluQ, GLU.GLU_SMOOTH);
+      glu.gluCylinder(gluQ, 0.05f, 0.05f, 0.8f, 60, 60);
       
-      myTreeTrunk.disable(gl);
 
     }
     gl.glPopMatrix();
@@ -82,14 +74,13 @@ public class Tree {
       myTreeLeaves.enable(gl);
       myTreeLeaves.bind(gl);
       
-      gl.glTranslated(x, y + (0.8f - 0.25), z);
-      glut.glutSolidSphere(0.3, 20, 20);
-      /**GLUquadric gluQuadratic = glu.gluNewQuadric();
-      glu.gluQuadricTexture(gluQuadratic, true);
-      glu.gluQuadricNormals(gluQuadratic, GLU.GLU_SMOOTH);
-      glu.gluSphere(gluQuadratic, 0.25f, 60, 60); **/
+      gl.glTranslated(this.myPos[0], this.myPos[1] + 0.8f, this.myPos[2]);
       
-      myTreeLeaves.disable(gl);
+      GLUquadric gluQ = glu.gluNewQuadric();
+      glu.gluQuadricTexture(gluQ, true);
+      glu.gluQuadricNormals(gluQ, GLU.GLU_SMOOTH);
+      glu.gluSphere(gluQ, 0.25f, 30, 60);
+      
     }
     gl.glPopMatrix();
     

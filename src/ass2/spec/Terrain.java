@@ -115,72 +115,43 @@ public class Terrain {
     myAltitude[x][z] = h;
   }
   
-  /**
-   * Get the altitude at an arbitrary point.
-   * Non-integer points should be interpolated from neighbouring grid points
-   *
-   * @param x point on x axis
-   * @param z point on z axis
-   * @return altitude at an arbitary point
-   */
+
   public double altitude(double x, double z) {
 	    double altitude = 0;
 	  
-	    //Out of bounds, return default value
 	    if (x < 0 || x > mySize.width -1 || z < 0 || z > mySize.height -1 )
 	      return altitude;
 	  
-	    //Check trivial case
 	    if ((int)x == x && (int)z == z) {
 	      altitude = getGridAltitude((int)x, (int)z);
 	    } else {
-	      //Compute closest 'grid' int coordinates
-	      //We floor/ceil based on winding order (Right hand rule)
-	      //Thus we know the point is enclosed in grid made by 4 points (leftX, rightX, upperZ, lowerZ).
-	      double leftX = Math.floor(x);
-	      double rightX = Math.ceil(x);
-	      double upperZ = Math.floor(z);
-	      double lowerZ = Math.ceil(z);
-	      double hypotenuseX = (leftX + lowerZ) - z;
+	      
+	      double x1 = Math.floor(x);
+	      double x2 = Math.ceil(x);
+	      double z1 = Math.floor(z);
+	      double z2 = Math.ceil(z);
+	      double hyp = (x1 + z2) - z;
 	    
-	      if ((int)x == x) {  //X provided is int
-	        altitude = calcBilinearInterpolationZComponent(z, upperZ, lowerZ, x, x); //interpolate only Z component
-	      } else if ((int)z == z) { //Z provided is int
-	        altitude = calcBilinearInterpolationXComponent(x, leftX, rightX, z, z); //interpolate only X component
-	      } else if (x < hypotenuseX) { //Point exists in left triangle, interpolate using it
-	        altitude = calcBilinearInterpolation(x, leftX, leftX, rightX, z, lowerZ, upperZ, upperZ, hypotenuseX);
-	      } else { //x > hypotenuseX, point exists in right triangle, interpolate using it
-	        altitude = calcBilinearInterpolation(x, rightX, rightX, leftX, z, upperZ, lowerZ, lowerZ, hypotenuseX);
+	      if ((int)x == x) {
+	        altitude = ((z - z1) / (z2 - z1)) * getGridAltitude((int)x, (int)z2) +
+	      	      ((z2 - z) / (z2 - z1)) * getGridAltitude((int)x, (int)z1);
+	      } else if ((int)z == z) {
+	        altitude = ((x - x1) / (x2 - x1)) * getGridAltitude((int)x2, (int)z) + ((x2 - x) / (x2 - x1)) * getGridAltitude((int)x1, (int)z);
+	        
+	      } else if (x < hyp) {
+	        altitude = bilinearInterpolationCalc(x, x1, x1, x2, z, z2, z1, z1, hyp);
+	      } else {
+	        altitude = bilinearInterpolationCalc(x, x2, x2, x1, z, z1, z2, z2, hyp);
 	      }
 	    }
 	  
 	    return altitude;
 	  }
 	  
-	  /**
-	   * Helper bilinear interpolation function based on slides 39-41 week 5 lectures
-	   */
-	  private double calcBilinearInterpolationXComponent(double x, double x1, double x2, double z1, double z2) {
-	    return ((x - x1) / (x2 - x1)) * getGridAltitude((int)x2, (int)z2) +
-	      ((x2 - x) / (x2 - x1)) * getGridAltitude((int)x1, (int)z1);
-	  }
-	  
-	  /**
-	   * Helper bilinear interpolation function based on slides 39-41 week 5 lectures
-	   */
-	  private double calcBilinearInterpolationZComponent(double z, double z1, double z2, double x1, double x2) {
-	    return ((z - z1) / (z2 - z1)) * getGridAltitude((int)x2, (int)z2) +
-	      ((z2 - z) / (z2 - z1)) * getGridAltitude((int)x1, (int)z1);
-	  }
-	  
-	  /**
-	   * Helper bilinear interpolation function based on slides 39-41 week 5 lectures
-	   */
-	  private double calcBilinearInterpolation(double x, double x1, double x2, double x3,
-	                                           double z, double z1, double z2, double z3,
-	                                           double hypotenuseX) {
-	    return ((x - x1) / (hypotenuseX - x1)) * calcBilinearInterpolationZComponent(z, z1, z3, x1, x3) +
-	      ((hypotenuseX - x) / (hypotenuseX - x1)) * calcBilinearInterpolationZComponent(z, z1, z2, x1, x2);
+	  private double bilinearInterpolationCalc(double x, double x1, double x2, double x3, double z, double z1, double z2, double z3, double hyp) {
+	    double result =  ((x - x1) / (hyp - x1)) * (((z - z1) / (z3 - z1)) * getGridAltitude((int)x3, (int)z3) + ((z3 - z) / (z3 - z1)) * getGridAltitude((int)x1, (int)z1)) +
+	      ((hyp - x) / (hyp - x1)) * (((z - z1) / (z2 - z1)) * getGridAltitude((int)x2, (int)z2) + ((z2 - z) / (z2 - z1)) * getGridAltitude((int)x1, (int)z1));
+	    return result;
 	  }
   
   public Vector clip(Vector p) {
@@ -266,10 +237,9 @@ public class Terrain {
         double[] vec1 = {x, getGridAltitude(x, z), z};
         double[] vec2 = {x, getGridAltitude(x, z + 1), z + 1};
         double[] vec3 = {x + 1, getGridAltitude(x + 1, z), z};
-        
-        double[] v1Texture = {textureCoords.left(), textureCoords.bottom()};
-        double[] v2Texture = {textureCoords.right(), textureCoords.bottom()};
-        double[] v3Texture = {textureCoords.left(), textureCoords.top()};
+        double[] texture1 = {textureCoords.left(), textureCoords.bottom()};
+        double[] texture2 = {textureCoords.right(), textureCoords.bottom()};
+        double[] texture3 = {textureCoords.left(), textureCoords.top()};
         
         double[] norm1 = normalCalc(vec1, vec2, vec3);
         gl.glNormal3dv(norm1, 0);
@@ -277,12 +247,11 @@ public class Terrain {
 
         gl.glBegin(GL2.GL_TRIANGLES);
         {
-          gl.glColor3f(0.0f, 1.0f, 0.0f);
-          gl.glTexCoord2dv(v1Texture, 0);
+          gl.glTexCoord2dv(texture1, 0);
           gl.glVertex3dv(vec1, 0);
-          gl.glTexCoord2dv(v2Texture, 0);
+          gl.glTexCoord2dv(texture2, 0);
           gl.glVertex3dv(vec2, 0);
-          gl.glTexCoord2dv(v3Texture, 0);
+          gl.glTexCoord2dv(texture3, 0);
           gl.glVertex3dv(vec3, 0);
         }
         gl.glEnd();
@@ -290,10 +259,9 @@ public class Terrain {
         double[] vec4 = {x + 1, getGridAltitude(x + 1, z), z};
         double[] vec5 = {x, getGridAltitude(x, z + 1), z + 1};
         double[] vec6 = {x + 1, getGridAltitude(x + 1, z + 1), z + 1};
-        
-        double[] v4Texture = {textureCoords.left(), textureCoords.top()};
-        double[] v5Texture = {textureCoords.right(), textureCoords.bottom()};
-        double[] v6Texture = {textureCoords.right(), textureCoords.top()};
+        double[] texture4 = {textureCoords.left(), textureCoords.top()};
+        double[] texture5 = {textureCoords.right(), textureCoords.bottom()};
+        double[] texture6 = {textureCoords.right(), textureCoords.top()};
   
         double[] norm2 = normalCalc(vec4, vec5, vec6);
         gl.glNormal3dv(norm2, 0);
@@ -301,12 +269,11 @@ public class Terrain {
         
         gl.glBegin(GL2.GL_TRIANGLES);
         {
-          gl.glColor3f(0.0f, 1.0f, 0.0f);
-          gl.glTexCoord2dv(v4Texture, 0);
+          gl.glTexCoord2dv(texture4, 0);
           gl.glVertex3dv(vec4, 0);
-          gl.glTexCoord2dv(v5Texture, 0);
+          gl.glTexCoord2dv(texture5, 0);
           gl.glVertex3dv(vec5, 0);
-          gl.glTexCoord2dv(v6Texture, 0);
+          gl.glTexCoord2dv(texture6, 0);
           gl.glVertex3dv(vec6, 0);
         }
         gl.glEnd();
