@@ -110,7 +110,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	gl.glLoadIdentity();
     	
     	GLU glu = new GLU();
-    	glu.gluPerspective(90, 2, 0.1, 50);
+    	glu.gluPerspective(70, 2, 0.1, 50);
     	//glu.gluLookAt(5, 5, 15,
     	//		5, 0, 0,
     	//		0, 1, 0);
