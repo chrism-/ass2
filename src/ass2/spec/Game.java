@@ -48,6 +48,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 	private float cameraRotStep = 4;
 	private boolean showAvatar;
 	private float cameraAngle = 0;
+	
+	private final double DEG_TO_RAD = Math.PI / 180;
 
 
     public Game(Terrain terrain) {
@@ -116,9 +118,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	//System.out.println(cameraAngle);
     	
     	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
-    	System.out.println(	myTerrain.altitude(4.0, 4.0));
-    	gl.glTranslated(-3,  -myTerrain.altitude(3, 3), -3);
-    	//gl.glTranslated(-playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z), -playerPos.z);
+    	//System.out.println(	myTerrain.altitude(4.0, 4.0));
+    	//gl.glTranslated(-3,  -myTerrain.altitude(3, 3), -3);
+    	gl.glTranslated(-playerPos.x, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5, -playerPos.z);
     	//gl.glTranslatef(-position.x, -position.y, -position.z);
     	
     	// rotate the light
@@ -219,16 +221,16 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	switch (ev.getKeyCode()) {
     	case KeyEvent.VK_UP:
-    		x = playerSpeed * Math.sin(cameraAngle);
-    		y = playerSpeed * Math.cos(cameraAngle);
+    		x = playerSpeed * Math.sin(cameraAngle * DEG_TO_RAD);
+    		y = playerSpeed * Math.cos(cameraAngle * DEG_TO_RAD);
     		
-    		playerPos = myTerrain.clip(playerPos.add(new Vector (x, y)));
+    		playerPos = myTerrain.clip(playerPos.add(new Vector (-x, -y)));
     		break;
     	case KeyEvent.VK_DOWN:
-    		x = playerSpeed * Math.sin(cameraAngle);
-    		y = playerSpeed * Math.cos(cameraAngle);
+    		x = playerSpeed * Math.sin(cameraAngle * DEG_TO_RAD);
+    		y = playerSpeed * Math.cos(cameraAngle * DEG_TO_RAD);
     		
-    		playerPos = myTerrain.clip(playerPos.sub(new Vector (x, y)));
+    		playerPos = myTerrain.clip(playerPos.sub(new Vector (-x, -y)));
     		break;
     	case KeyEvent.VK_LEFT:
     		
