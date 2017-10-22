@@ -28,7 +28,7 @@ public class Tree {
   }
   
   
-  public void draw(GL2 gl) {
+  public void draw(GL2 gl, Texture treeTrunk, Texture treeLeaves) {
     gl.glPushMatrix();
     gl.glPushAttrib(GL2.GL_LIGHTING);
   
@@ -50,13 +50,19 @@ public class Tree {
       gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, dif, 0);
       gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, spec, 0);
       
+      Texture myTreeTrunk = treeTrunk;
+      myTreeTrunk.enable(gl);
+      myTreeTrunk.bind(gl);
+      
       gl.glTranslated(x, y - 0.25, z);
       gl.glRotated(-90.0, 1, 0, 0);
       glut.glutSolidCylinder(0.1,0.7,20,20);      
       /**GLUquadric gluQuadratic = glu.gluNewQuadric();
       glu.gluQuadricTexture(gluQuadratic, true);
       glu.gluQuadricNormals(gluQuadratic, GLU.GLU_SMOOTH);
-      glu.gluCylinder(gluQuadratic, 0.05f, 0.05f, 0.8f, 60, 60); **/
+      glu.gluCylinder(gluQuadratic, 0.05f, 0.05f, 0.8f, 60, 60);**/
+      
+      myTreeTrunk.disable(gl);
 
     }
     gl.glPopMatrix();
@@ -72,12 +78,18 @@ public class Tree {
       gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, dif, 0);
       gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, spec, 0);
       
+      Texture myTreeLeaves = treeLeaves;
+      myTreeLeaves.enable(gl);
+      myTreeLeaves.bind(gl);
+      
       gl.glTranslated(x, y + (0.8f - 0.25), z);
       glut.glutSolidSphere(0.3, 20, 20);
       /**GLUquadric gluQuadratic = glu.gluNewQuadric();
       glu.gluQuadricTexture(gluQuadratic, true);
       glu.gluQuadricNormals(gluQuadratic, GLU.GLU_SMOOTH);
       glu.gluSphere(gluQuadratic, 0.25f, 60, 60); **/
+      
+      myTreeLeaves.disable(gl);
     }
     gl.glPopMatrix();
     

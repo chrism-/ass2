@@ -4,12 +4,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLJPanel;
 import com.jogamp.opengl.glu.GLU;
 
 import javax.swing.JFrame;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+
 import ass2.spec.Shader;
 
 
@@ -22,6 +27,10 @@ import ass2.spec.Shader;
 public class Game extends JFrame implements GLEventListener, KeyListener{
 
     private Terrain myTerrain;
+    
+    private Texture terrainTexture;
+    private Texture treeTrunkTexture;
+    private Texture treeLeavesTexture;
     
     private static final String VERTEX_SHADER = "resources/PhongVertex.glsl";
     private static final String FRAGMENT_SHADER = "resources/PhongFragment.glsl";
@@ -44,11 +53,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
-        
+
         addKeyListener(this);
         setFocusable(true);
-   
     }
+   
+
     
     /** 
      * Run the game.
@@ -141,7 +151,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
 		
 		gl.glColor3d(0, 0, 1);
-		myTerrain.draw(gl);
+		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture);
 
 	}
 
@@ -167,6 +177,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         // normalise normals (!)
         // this is necessary to make lighting work properly
         gl.glEnable(GL2.GL_NORMALIZE);
+        gl.glEnable(GL2.GL_TEXTURE_2D);
+        try {
+        	this.terrainTexture = TextureIO.newTexture(new File("grass.jpg"), true);
+        	this.treeTrunkTexture = TextureIO.newTexture(new File("trunk.jpg"), true);
+        	this.treeLeavesTexture = TextureIO.newTexture(new File("leaves.jpg"), true);
+        } catch (IOException e){
+        	e.printStackTrace();
+        }
         
    	 	try {
    		 shaderprogram = Shader.initShaders(gl,VERTEX_SHADER,FRAGMENT_SHADER);
