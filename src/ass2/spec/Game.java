@@ -1,5 +1,7 @@
 package ass2.spec;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import com.jogamp.opengl.*;
@@ -17,7 +19,7 @@ import ass2.spec.Shader;
  *
  * @author malcolmr
  */
-public class Game extends JFrame implements GLEventListener{
+public class Game extends JFrame implements GLEventListener, KeyListener{
 
     private Terrain myTerrain;
     
@@ -30,13 +32,21 @@ public class Game extends JFrame implements GLEventListener{
   	
        
 	private int shaderprogram;
-	
 	private int shaderprogram2;
+	
+	private Vector playerPos = new Vector(3, 3);
+	private float playerSpeed = 1;
+	private float cameraRotStep = 4;
+	private boolean showAvatar;
+	private float cameraAngle = 0;
 
 
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
+        
+        addKeyListener(this);
+        setFocusable(true);
    
     }
     
@@ -56,7 +66,7 @@ public class Game extends JFrame implements GLEventListener{
           animator.start();
 
           getContentPane().add(panel);
-          setSize(800, 600);        
+          setSize(1366, 768);        
           setVisible(true);
           setDefaultCloseOperation(EXIT_ON_CLOSE);        
     }
@@ -89,15 +99,23 @@ public class Game extends JFrame implements GLEventListener{
     	
     	GLU glu = new GLU();
     	glu.gluPerspective(90, 2, 1, 50);
-    	glu.gluLookAt(5, 5, 15,
-    			5, 0, 0,
-    			0, 1, 0);
+    	//glu.gluLookAt(5, 5, 15,
+    	//		5, 0, 0,
+    	//		0, 1, 0);
+    	
+    	//System.out.println(cameraAngle);
+    	
+    	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
+    	System.out.println(	myTerrain.altitude(3, 3));
+    	gl.glTranslated(-3,  -myTerrain.altitude(3, 3), -3);
+    	//gl.glTranslated(-playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z), -playerPos.z);
+    	//gl.glTranslatef(-position.x, -position.y, -position.z);
     	
     	// rotate the light
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         
-        gl.glPushMatrix();
-        gl.glLoadIdentity();
+        //gl.glPushMatrix();
+        //gl.glLoadIdentity();
         gl.glRotated(0, 1, 0, 0);
         gl.glRotated(0, 0, 1, 0);
       
@@ -165,7 +183,59 @@ public class Game extends JFrame implements GLEventListener{
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
-		// TODO Auto-generated method stub
+		GL2 gl = drawable.getGL().getGL2();
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+        
+        GLU glu = new GLU();
+        glu.gluPerspective(60.0, (float)width/(float)height, 1.0, 20.0);
+        
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+		
+	}
+
+    @Override
+	public void keyPressed(KeyEvent ev) {
+    	System.out.println("rotating camera");
+    	double x,y;
+    	
+    	switch (ev.getKeyCode()) {
+    	case KeyEvent.VK_UP:
+    		x = playerSpeed * Math.sin(cameraAngle);
+    		y = playerSpeed * Math.cos(cameraAngle);
+    		
+    		playerPos = myTerrain.clip(playerPos.add(new Vector (x, y)));
+    		break;
+    	case KeyEvent.VK_DOWN:
+    		x = playerSpeed * Math.sin(cameraAngle);
+    		y = playerSpeed * Math.cos(cameraAngle);
+    		
+    		playerPos = myTerrain.clip(playerPos.sub(new Vector (x, y)));
+    		break;
+    	case KeyEvent.VK_LEFT:
+    		
+    		cameraAngle -= cameraRotStep;
+    		if (cameraAngle < 0.0) cameraAngle += 360.0;
+    		break;
+    	case KeyEvent.VK_RIGHT:
+    		cameraAngle += cameraRotStep;
+    		if (cameraAngle > 360.0) cameraAngle -= 360.0;
+    		break;
+    	case KeyEvent.VK_SPACE:
+    		 showAvatar = !showAvatar;
+			 break;
+    	default:
+    		break;
+    	}
+    }
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
 		
 	}
 }

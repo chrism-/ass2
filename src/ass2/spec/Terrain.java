@@ -149,6 +149,20 @@ public class Terrain {
     return altitude;
   }
   
+  public Vector clip(Vector p) {
+	  double x = p.x;
+	  double y = p.z;
+	  if (p.x > mySize.getWidth())
+		  x = mySize.getWidth();
+	  else if (p.x < 0)
+		  x = 0;
+	  if (p.z > mySize.getHeight())
+		  y = mySize.getHeight();
+	  else if (p.z < 0)
+		  y = 0;
+	  return new Vector (x, y);
+  }
+  
   
   /**
    * Add a tree at the specified (x,z) point.
