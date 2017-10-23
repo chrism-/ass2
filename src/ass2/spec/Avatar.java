@@ -33,7 +33,7 @@ public class Avatar {
     System.out.println("player.x " + playerPos.x + " player.z = " + playerPos.z);
     
     gl.glTranslated(playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z) + 0.5f, playerPos.z);
-    gl.glRotated(cameraAngle, 0, 1, 0);
+    gl.glRotated(-cameraAngle, 0, 1, 0);
   
     gl.glFrontFace(GL2.GL_CW);
     glut.glutSolidTeapot(0.1f);
