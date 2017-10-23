@@ -111,17 +111,23 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	GLU glu = new GLU();
     	glu.gluPerspective(70, 2, 0.1, 50);
-    	//glu.gluLookAt(5, 5, 15,
-    	//		5, 0, 0,
-    	//		0, 1, 0);
+    	
+    	double altAvatar = 0;
+    	double xOffset = 0;
+    	double zOffset = 0;
+    	
+    	if(showAvatar){
+    		altAvatar = 1;
+    		xOffset = Math.cos(Math.toRadians(cameraAngle));
+//    		System.out.println("xOffset = " + xOffset);
+    	    zOffset = Math.sin(Math.toRadians(cameraAngle));
+//    	    System.out.println("zOffset = " + zOffset);
+    	}
     	
     	//System.out.println(cameraAngle);
-    	
     	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
-    	//System.out.println(	myTerrain.altitude(4.0, 4.0));
-    	//gl.glTranslated(-3,  -myTerrain.altitude(3, 3), -3);
-    	gl.glTranslated(-playerPos.x, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5, -playerPos.z);
-    	//gl.glTranslatef(-position.x, -position.y, -position.z);
+    	gl.glTranslated(-playerPos.x + xOffset, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5 - altAvatar, -playerPos.z + zOffset);
+
     	
     	// rotate the light
         gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -155,9 +161,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 		gl.glColor3d(0, 0, 1);
 		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture);
 		
+		if(showAvatar){
+			System.out.println("showAvatar");
+			Avatar avatar = new Avatar(myTerrain, playerPos, cameraAngle);
+			avatar.draw(gl,showAvatar);
+		}
 		
-		//gl.glPopMatrix();
-		//gl.glColor3f(1, 1, 1);
 		for (Road r : myTerrain.roads()) {
 			gl.glBegin(GL2.GL_TRIANGLE_STRIP);
 			System.out.println(r.size());
@@ -199,6 +208,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 			}
 			gl.glEnd();
 		}
+
 	}
 
 	@Override
