@@ -3,11 +3,9 @@ package ass2.spec;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListener;
+
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.glu.GLUquadric;
-import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
@@ -123,7 +121,8 @@ public class Terrain {
 
   public double altitude(double x, double z) {
 	    double altitude = 0;
-	  
+	    
+	    //check if x is out of bounds
 	    if (x < 0 || x > mySize.width -1 || z < 0 || z > mySize.height -1 )
 	      return altitude;
 	  
@@ -138,14 +137,18 @@ public class Terrain {
 	      double hyp = (x1 + z2) - z;
 	    
 	      if ((int)x == x) {
-	        altitude = ((z - z1) / (z2 - z1)) * getGridAltitude((int)x, (int)z2) +
+	        //interpolate z 
+	    	altitude = ((z - z1) / (z2 - z1)) * getGridAltitude((int)x, (int)z2) +
 	      	      ((z2 - z) / (z2 - z1)) * getGridAltitude((int)x, (int)z1);
 	      } else if ((int)z == z) {
-	        altitude = ((x - x1) / (x2 - x1)) * getGridAltitude((int)x2, (int)z) + ((x2 - x) / (x2 - x1)) * getGridAltitude((int)x1, (int)z);
+	        //interpoilate x 
+	    	  altitude = ((x - x1) / (x2 - x1)) * getGridAltitude((int)x2, (int)z) + ((x2 - x) / (x2 - x1)) * getGridAltitude((int)x1, (int)z);
 	        
 	      } else if (x < hyp) {
-	        altitude = bilinearInterpolationCalc(x, x1, x1, x2, z, z2, z1, z1, hyp);
+	        //point exists left triangle
+	    	  altitude = bilinearInterpolationCalc(x, x1, x1, x2, z, z2, z1, z1, hyp);
 	      } else {
+	    	  //point exists right triangle
 	        altitude = bilinearInterpolationCalc(x, x2, x2, x1, z, z1, z2, z2, hyp);
 	      }
 	    }
@@ -153,12 +156,14 @@ public class Terrain {
 	    return altitude;
 	  }
 	  
+  //calculate bilinear interpolation
 	  private double bilinearInterpolationCalc(double x, double x1, double x2, double x3, double z, double z1, double z2, double z3, double hyp) {
 	    double result =  ((x - x1) / (hyp - x1)) * (((z - z1) / (z3 - z1)) * getGridAltitude((int)x3, (int)z3) + ((z3 - z) / (z3 - z1)) * getGridAltitude((int)x1, (int)z1)) +
 	      ((hyp - x) / (hyp - x1)) * (((z - z1) / (z2 - z1)) * getGridAltitude((int)x2, (int)z2) + ((z2 - z) / (z2 - z1)) * getGridAltitude((int)x1, (int)z1));
 	    return result;
 	  }
   
+  //check for collision and out of bounds
   public Vector clip(Vector p) {
 	  double x = p.x;
 	  double y = p.z;
@@ -213,7 +218,8 @@ public class Terrain {
 	    return product;
 	  }
   
-	private double sunPosCalc() {
+	//calculate the angle of the sun
+  	private double sunPosCalc() {
 		Calendar cal = Calendar.getInstance();	
 		double min = (180*(cal.get(Calendar.SECOND)*1000 + cal.get(Calendar.MILLISECOND)) /60000.0);		
 		min = Math.toRadians(min);
@@ -229,9 +235,10 @@ public class Terrain {
     
     gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
     
+    //calculate the colour of the sun and the position and set material
 	float calcColour = (float) Math.sin(sunPosCalc());
 	float calcPosition = (float) (-Math.cos(sunPosCalc()));
-    float[] amb = {0.2f, 0.2f, 0.2f, 1f};
+	float[] amb = {0.2f, 0.2f, 0.2f, 1f};
     float[] spec = {0.8f, 0.8f, 0.8f, 1f}; 
     float[] colourOfsun = {1.0f,(float) (0.45+(calcColour*0.55)),1.0f,1.0f};   
     float[] sunPos = {(float) (calcPosition*mySize.getWidth()),calcColour*5,(float)(mySize.getHeight()/2)};
@@ -255,6 +262,7 @@ public class Terrain {
 //    	gl.glLightf(GL2.GL_LIGHT2, GL2.GL_SPOT_CUTOFF, 35.0f);
 //    	gl.glDisable(GL2.GL_LIGHT1);
     } else {
+    	//if night mode is not active. Use directional light where the sun is
     	gl.glDisable(GL2.GL_LIGHT1);
     	gl.glDisable(GL2.GL_LIGHT2);
     	gl.glEnable(GL2.GL_LIGHT0);
@@ -262,7 +270,7 @@ public class Terrain {
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, amb, 0);
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, colourOfsun, 0);
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, spec, 0);
-        
+        //render the sphere for the sun
         gl.glPushMatrix();  
         gl.glTranslatef(sunPos[0], sunPos[1], sunPos[2]);
         gl.glEnable(GL2.GL_TEXTURE_GEN_S); 
@@ -277,7 +285,7 @@ public class Terrain {
         gl.glPopMatrix();
     }
     
-    
+    //setup the texture for terrain
     Texture myTerrain = terrain;
     myTerrain.enable(gl);
     myTerrain.bind(gl);
@@ -286,9 +294,10 @@ public class Terrain {
     int height = mySize.height;
     int width = mySize.width;
     
+   //rennder each part of the terrain as two triangles
     for (int z = 0; z < height -1; ++z) {
       for (int x = 0; x < width -1; ++x) {
-        
+        //coords fir furst triangle
         double[] vec1 = {x, getGridAltitude(x, z), z};
         double[] vec2 = {x, getGridAltitude(x, z + 1), z + 1};
         double[] vec3 = {x + 1, getGridAltitude(x + 1, z), z};
@@ -299,7 +308,7 @@ public class Terrain {
         double[] norm1 = normalCalc(vec1, vec2, vec3);
         gl.glNormal3dv(norm1, 0);
         
-
+        //render first triangle
         gl.glBegin(GL2.GL_TRIANGLES);
         {
           gl.glTexCoord2dv(texture1, 0);
@@ -310,7 +319,8 @@ public class Terrain {
           gl.glVertex3dv(vec3, 0);
         }
         gl.glEnd();
-
+        
+        //coords for second triangle
         double[] vec4 = {x + 1, getGridAltitude(x + 1, z), z};
         double[] vec5 = {x, getGridAltitude(x, z + 1), z + 1};
         double[] vec6 = {x + 1, getGridAltitude(x + 1, z + 1), z + 1};
@@ -321,7 +331,7 @@ public class Terrain {
         double[] norm2 = normalCalc(vec4, vec5, vec6);
         gl.glNormal3dv(norm2, 0);
   
-        
+        //render second triangle
         gl.glBegin(GL2.GL_TRIANGLES);
         {
           gl.glTexCoord2dv(texture4, 0);
@@ -335,12 +345,13 @@ public class Terrain {
       }
     }
     gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-    myTerrain.disable(gl);
     
+    //render trees
     for (Tree tree : myTrees) {
       tree.draw(gl, treeTrunk, treeLeaves);
     }
     
+    //render roads
     for(Road road : myRoads){
     	road.draw(gl, roads);
     }
