@@ -31,7 +31,7 @@ public class Avatar {
     
     gl.glPushMatrix();
     
-    
+    // move player to position
     gl.glTranslated(playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z) + 0.5f, playerPos.z);
     gl.glRotated(-cameraAngle, 0, 1, 0);  
     
@@ -58,7 +58,7 @@ public class Avatar {
     	//gl.glDisable(GL2.GL_LIGHT1);
     }
     
-    
+    // draw
     
   
     gl.glFrontFace(GL2.GL_CW);

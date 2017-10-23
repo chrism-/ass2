@@ -143,25 +143,25 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	gl.glLoadIdentity();
 
       
-        
-        float[] pos = new float[] { 10.0f, 10.0f, 10.0f, 1.0f };
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, pos, 0);
-        gl.glPopMatrix();
-
-        float[] a = new float[4];
-        a[0] = a[1] = a[2] = 1;
-        a[3] = 1.0f;
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, a, 0);
-
-        float[] d = new float[4];
-        d[0] = d[1] = d[2] = 1;
-        d[3] = 1.0f;
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, d, 0);
-
-        float[] s = new float[4];
-        s[0] = s[1] = s[2] = 1;
-        s[3] = 1.0f;
-        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, s, 0);
+        // lighting
+//        float[] pos = new float[] { 10.0f, 10.0f, 10.0f, 1.0f };
+//        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, pos, 0);
+//        gl.glPopMatrix();
+//
+//        float[] a = new float[4];
+//        a[0] = a[1] = a[2] = 1;
+//        a[3] = 1.0f;
+//        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, a, 0);
+//
+//        float[] d = new float[4];
+//        d[0] = d[1] = d[2] = 1;
+//        d[3] = 1.0f;
+//        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, d, 0);
+//
+//        float[] s = new float[4];
+//        s[0] = s[1] = s[2] = 1;
+//        s[3] = 1.0f;
+//        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, s, 0);
 		
         
         //render terrain, trees and roads
