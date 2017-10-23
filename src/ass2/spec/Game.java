@@ -165,20 +165,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         s[0] = s[1] = s[2] = 1;
         s[3] = 1.0f;
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, s, 0);
-        
-        
-        
-<<<<<<< HEAD
-        //gl.glLoadIdentity();
-        
-        
-=======
-        //render avatar
-        if(showAvatar){
-			avatar.updatePos(playerPos, cameraAngle);
-			avatar.draw(gl,nightMode);
-        }
->>>>>>> 6e86acb7032bf6b864049fec53d9ab1ae877ee3f
 		
         
         //render terrain, trees and roads
