@@ -32,7 +32,7 @@ public class Avatar {
     gl.glPushMatrix();
     System.out.println("player.x " + playerPos.x + " player.z = " + playerPos.z);
     
-    gl.glTranslated(playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z) + 0.01f, playerPos.z);
+    gl.glTranslated(playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z) + 0.5f, playerPos.z);
     gl.glRotated(cameraAngle, 0, 1, 0);
   
     gl.glFrontFace(GL2.GL_CW);

@@ -45,10 +45,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 	private int shaderprogram2;
 	
 	private Vector playerPos = new Vector(0, 0);
-	private float playerSpeed = 1;
+	private float playerSpeed = 0.1f;
 	private float cameraRotStep = 4;
 	private boolean showAvatar;
-	private float cameraAngle = 0;
+	private float cameraAngle = 120;
 	
 	private final double DEG_TO_RAD = Math.PI / 180;
 	
@@ -124,20 +124,21 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	if(showAvatar){
     		altAvatar = 1;
-    		xOffset = Math.cos(Math.toRadians(cameraAngle));
+    		xOffset = Math.cos(Math.toRadians(cameraAngle + 90));
 //    		System.out.println("xOffset = " + xOffset);
-    	    zOffset = Math.sin(Math.toRadians(cameraAngle));
+    	    zOffset = Math.sin(Math.toRadians(cameraAngle + 90));
 //    	    System.out.println("zOffset = " + zOffset);
     	}
     	
     	//System.out.println(cameraAngle);
+    	
     	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
-    	gl.glTranslated(-playerPos.x, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5, -playerPos.z);
+    	gl.glTranslated(-playerPos.x -xOffset, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5, -playerPos.z - xOffset);
+    	
 
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
     	gl.glLoadIdentity();
-    	
     	
     	
     	
