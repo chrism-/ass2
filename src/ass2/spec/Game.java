@@ -38,11 +38,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     
     private static final String VERTEX_SHADER2 = "resources/PassThroughVertex.glsl";
   	private static final String FRAGMENT_SHADER2 = "resources/PassThroughFragment.glsl";
-  	
-  	
-       
-	private int shaderprogram;
-	private int shaderprogram2;
 	
 	private Vector playerPos = new Vector(0, 0);
 	private float playerSpeed = 0.1f;
@@ -52,8 +47,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 	
 	private Boolean nightMode = false;
 	
-	private final double DEG_TO_RAD = Math.PI / 180;
-	
 	private Avatar avatar;
 
 
@@ -61,6 +54,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	super("Assignment 2");
         myTerrain = terrain;
         avatar =  new Avatar(myTerrain, playerPos, cameraAngle);
+        
+        // make the window able to detect keys
 
         addKeyListener(this);
         setFocusable(true);
@@ -137,6 +132,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 //    	    System.out.println("zOffset = " + zOffset);
     	}
     	
+    	//offset camera behind player if showing
+    	
     	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
     	gl.glTranslated(-playerPos.x -xOffset, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5, -playerPos.z - zOffset);
     	
@@ -170,6 +167,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         //render terrain, trees and roads
 		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture, nightMode, cameraAngle, playerPos);
 		
+		//render avatar if showing
 		if(showAvatar){
 			avatar.updatePos(playerPos, cameraAngle);
 			avatar.draw(gl,nightMode);
@@ -207,16 +205,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         	this.roadTexture = TextureIO.newTexture(new File("Textures/roads.jpg"), true);
         } catch (IOException e){
         	e.printStackTrace();
-        }
-        
-   	 	try {
-   		 shaderprogram = Shader.initShaders(gl,VERTEX_SHADER,FRAGMENT_SHADER);
-   		 shaderprogram2 = Shader.initShaders(gl,VERTEX_SHADER2,FRAGMENT_SHADER2);
-   		 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
         }
 		
 	}
