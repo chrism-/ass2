@@ -113,14 +113,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	gl.glMatrixMode(GL2.GL_PROJECTION);
     	gl.glLoadIdentity();
     	
+    	
+    	
     	GLU glu = new GLU();
     	glu.gluPerspective(70, 2, 0.1, 50);
     	
     	double altAvatar = 0;
     	double xOffset = 0;
     	double zOffset = 0;
-    	
-    	
     	
     	if(showAvatar){
     		altAvatar = 1;
@@ -135,9 +135,16 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	gl.glTranslated(-playerPos.x + xOffset, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5 - altAvatar, -playerPos.z + zOffset);
 
     	
+    	gl.glMatrixMode(GL2.GL_MODELVIEW);
+    	gl.glLoadIdentity();
+    	
+    	
+    	
+    	
+    	
     	// rotate the light
     	
-    	gl.glMatrixMode(GL2.GL_MODELVIEW);
+    	
         
         
         //gl.glPushMatrix();
@@ -167,60 +174,59 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
 		
         if(showAvatar){
-			System.out.println("showAvatar");
 			avatar.updatePos(playerPos, cameraAngle);
 			avatar.draw(gl);
 		}
         
-        gl.glLoadIdentity();
+//        gl.glLoadIdentity();
 		
         
 		gl.glColor3d(0, 0, 1);
 		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture);
 		
-		gl.glLoadIdentity();
+//		gl.glLoadIdentity();
 		
-		for (Road r : myTerrain.roads()) {
-			gl.glBegin(GL2.GL_TRIANGLE_STRIP);
-			System.out.println(r.size());
-			for (double i = 0.1; i < r.size(); i+=0.01) {
-				
-		    		
-		    		double[] p = r.point(i);
-		    		//double[] tg2d = this.tangent(i);
-		    		//double[] normal2d = new double[]{-tg2d[1],tg2d[0]};
-		    		
-		    		//normalize the normal
-		    		
-//		    		double norm = normal2d[0]*normal2d[0] + normal2d[1]*normal2d[1];
-//		    		norm = Math.sqrt(norm);
-//		    		normal2d[0] /= norm;
-//		    		normal2d[1] /= norm;
+//		for (Road r : myTerrain.roads()) {
+//			gl.glBegin(GL2.GL_TRIANGLE_STRIP);
+//			System.out.println(r.size());
+//			for (double i = 0.1; i < r.size(); i+=0.01) {
+//				
 //		    		
-		    		// Draw the points on the plane with y = h
-		    		
-		    		//Order matters! CCW order!
-		    		
-		    		
-		    		//Little epsion in height so it isn't IN the ground, but ON
-		    		// the ground
-		    		double eps = 0.001;
-		    		double w = r.width()/2;
-		    		
-//		    		System.out.println(-w+p[0]);
-//		    		System.out.println( myTerrain.altitude(p[0], p[1]) + eps);
-//		    				System.out.println( -w+p[1]);
-
-		    		//gl.glNormal3d(0, 1, 0);
-		    		//gl.glTexCoord2d(-w*normal2d[0]+p[0], -w*normal2d[1] + p[1]); 
-		    		gl.glVertex3d(-w+p[0], myTerrain.altitude(p[0], p[1]) + eps, -w+p[1]);
-		    		//gl.glTexCoord2d(w*normal2d[0]+p[0], w*normal2d[1] + p[1]); 
-		    		gl.glVertex3d(w+p[0], myTerrain.altitude(p[0], p[1]) + eps, w+p[1]);
-		    	
-		    	
-			}
-			gl.glEnd();
-		}
+//		    		double[] p = r.point(i);
+//		    		//double[] tg2d = this.tangent(i);
+//		    		//double[] normal2d = new double[]{-tg2d[1],tg2d[0]};
+//		    		
+//		    		//normalize the normal
+//		    		
+////		    		double norm = normal2d[0]*normal2d[0] + normal2d[1]*normal2d[1];
+////		    		norm = Math.sqrt(norm);
+////		    		normal2d[0] /= norm;
+////		    		normal2d[1] /= norm;
+////		    		
+//		    		// Draw the points on the plane with y = h
+//		    		
+//		    		//Order matters! CCW order!
+//		    		
+//		    		
+//		    		//Little epsion in height so it isn't IN the ground, but ON
+//		    		// the ground
+//		    		double eps = 0.001;
+//		    		double w = r.width()/2;
+//		    		
+////		    		System.out.println(-w+p[0]);
+////		    		System.out.println( myTerrain.altitude(p[0], p[1]) + eps);
+////		    				System.out.println( -w+p[1]);
+//
+//		    		//gl.glNormal3d(0, 1, 0);
+//		    		//gl.glTexCoord2d(-w*normal2d[0]+p[0], -w*normal2d[1] + p[1]); 
+//		    		gl.glVertex3d(-w+p[0], myTerrain.altitude(p[0], p[1]) + eps, -w+p[1]);
+//		    		//gl.glTexCoord2d(w*normal2d[0]+p[0], w*normal2d[1] + p[1]); 
+//		    		gl.glVertex3d(w+p[0], myTerrain.altitude(p[0], p[1]) + eps, w+p[1]);
+//		    	
+//		    	
+//			}
+//			gl.glEnd();
+		//}
 
 	}
 

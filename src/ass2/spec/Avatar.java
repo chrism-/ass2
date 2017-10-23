@@ -28,7 +28,8 @@ public class Avatar {
   
     //Set position
     //gl.glPopMatrix();
-    gl.glLoadIdentity();
+    //gl.glLoadIdentity();
+    gl.glPushMatrix();
     System.out.println("player.x " + playerPos.x + " player.z = " + playerPos.z);
     gl.glRotated(cameraAngle, 0, 1, 0);
     gl.glTranslated(playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z) - 0.01f, playerPos.z);
@@ -44,6 +45,6 @@ public class Avatar {
   
     
     gl.glPopAttrib();
-    gl.glPopMatrix();
+    //gl.glPopMatrix();
   }
 }
