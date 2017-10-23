@@ -221,14 +221,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	switch (ev.getKeyCode()) {
     	case KeyEvent.VK_UP:
-    		x = playerSpeed * Math.cos((cameraAngle + 90) * DEG_TO_RAD);
-    		y = playerSpeed * Math.sin((cameraAngle + 90) * DEG_TO_RAD);
+    		x = playerSpeed * Math.cos(Math.toRadians(cameraAngle + 90));
+    		y = playerSpeed * Math.sin(Math.toRadians(cameraAngle + 90));
     		
     		playerPos = myTerrain.clip(playerPos.add(new Vector (-x, -y)));
     		break;
     	case KeyEvent.VK_DOWN:
-    		x = playerSpeed * Math.cos((cameraAngle + 90) * DEG_TO_RAD);
-    		y = playerSpeed * Math.sin((cameraAngle + 90) * DEG_TO_RAD);
+    		x = playerSpeed * Math.cos(Math.toRadians(cameraAngle + 90));
+    		y = playerSpeed * Math.sin(Math.toRadians(cameraAngle + 90));
     		
     		playerPos = myTerrain.clip(playerPos.sub(new Vector (-x, -y)));
     		break;

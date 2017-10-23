@@ -213,11 +213,10 @@ public class Terrain {
 	    return product;
 	  }
   
-	private double SunPosCalc() {
-		Calendar calendar = Calendar.getInstance();	
-		double min = 180*(calendar.get(Calendar.SECOND)*1000) /60000.0;		
-		min = (float) Math.toRadians(min);
-		System.out.println("min = " + min);
+	private double sunPosCalc() {
+		Calendar cal = Calendar.getInstance();	
+		double min = (180*(cal.get(Calendar.SECOND)*1000 + cal.get(Calendar.MILLISECOND)) /60000.0);		
+		min = Math.toRadians(min);
 		return min;
 	}
 	  
@@ -230,8 +229,8 @@ public class Terrain {
     
     gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
     
-	float calcColour = (float) Math.sin(SunPosCalc());
-	float calcPosition = (float) (-Math.cos(SunPosCalc()));
+	float calcColour = (float) Math.sin(sunPosCalc());
+	float calcPosition = (float) (-Math.cos(sunPosCalc()));
     float[] amb = {0.2f, 0.2f, 0.2f, 1f};
     float[] spec = {0.8f, 0.8f, 0.8f, 1f}; 
     float[] colourOfsun = {1.0f,(float) (0.45+(calcColour*0.55)),1.0f,1.0f};   
