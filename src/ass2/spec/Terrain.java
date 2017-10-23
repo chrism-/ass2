@@ -247,13 +247,13 @@ public class Terrain {
     	gl.glDisable(GL2.GL_LIGHT0);
     	gl.glDisable(GL2.GL_LIGHT1);
     	gl.glEnable(GL2.GL_LIGHT2);        
-    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_AMBIENT, amb, 0);
-    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_SPECULAR, spec, 0);
-    	gl.glLightfv (GL2.GL_LIGHT2, GL2.GL_POSITION, lightPos,0);
-    	gl.glLightf (GL2.GL_LIGHT2, GL2.GL_SPOT_EXPONENT , 3.0f);
-    	gl.glLightfv (GL2.GL_LIGHT2, GL2.GL_SPOT_DIRECTION, lightDir,0);	
-    	gl.glLightf(GL2.GL_LIGHT2, GL2.GL_SPOT_CUTOFF, 35.0f);
-    	gl.glDisable(GL2.GL_LIGHT1);
+//    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_AMBIENT, amb, 0);
+//    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_SPECULAR, spec, 0);
+//    	gl.glLightfv (GL2.GL_LIGHT2, GL2.GL_POSITION, lightPos,0);
+//    	gl.glLightf (GL2.GL_LIGHT2, GL2.GL_SPOT_EXPONENT , 3.0f);
+//    	gl.glLightfv (GL2.GL_LIGHT2, GL2.GL_SPOT_DIRECTION, lightDir,0);	
+//    	gl.glLightf(GL2.GL_LIGHT2, GL2.GL_SPOT_CUTOFF, 35.0f);
+//    	gl.glDisable(GL2.GL_LIGHT1);
     } else {
     	gl.glDisable(GL2.GL_LIGHT1);
     	gl.glDisable(GL2.GL_LIGHT2);
