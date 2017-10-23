@@ -106,7 +106,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
 		GL2 gl = drawable.getGL().getGL2();
 		
-		gl.glClearColor(0, 0, 0, 1);
+		gl.glClearColor(85.0f/256.0f, 142.0f/256.0f, 234.0f/256.0f, 1);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
     	
     	//set the camera
@@ -132,7 +132,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	//System.out.println(cameraAngle);
     	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
-    	gl.glTranslated(-playerPos.x + xOffset, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5 - altAvatar, -playerPos.z + zOffset);
+    	gl.glTranslated(-playerPos.x, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5, -playerPos.z);
 
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
