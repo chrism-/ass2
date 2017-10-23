@@ -215,10 +215,10 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glEnable(GL2.GL_TEXTURE_2D);
         try {
         	//load textures
-        	this.terrainTexture = TextureIO.newTexture(new File("Textures/grass.jpg"), true);
-        	this.treeTrunkTexture = TextureIO.newTexture(new File("Textures/trunk.jpg"), true);
-        	this.treeLeavesTexture = TextureIO.newTexture(new File("Textures/leaf.jpg"), true);
-        	this.roadTexture = TextureIO.newTexture(new File("Textures/roads.jpg"), true);
+        	this.terrainTexture = TextureIO.newTexture(new File("grass.jpg"), true);
+        	this.treeTrunkTexture = TextureIO.newTexture(new File("trunk.jpg"), true);
+        	this.treeLeavesTexture = TextureIO.newTexture(new File("leaf.jpg"), true);
+        	this.roadTexture = TextureIO.newTexture(new File("roads.jpg"), true);
         } catch (IOException e){
         	e.printStackTrace();
         }
