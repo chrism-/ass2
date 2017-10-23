@@ -186,12 +186,12 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         
         if(showAvatar){
 			avatar.updatePos(playerPos, cameraAngle);
-			avatar.draw(gl);
-		}
+			avatar.draw(gl,nightMode);
+        }
 		
         
 		//gl.glColor3d(0, 0, 1);
-		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture, nightMode);
+		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture, nightMode, cameraAngle, playerPos);
 
 	}
 

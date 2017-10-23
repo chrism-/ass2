@@ -6,7 +6,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 public class Avatar {
   private Terrain myTerrain;
   private Vector playerPos;
-  private double cameraAngle;
+  private float cameraAngle;
 
   public Avatar(Terrain terrain, Vector playerPos, float cameraAngle) {
     this.myTerrain = terrain;
@@ -20,20 +20,16 @@ public class Avatar {
 	  
   }
   
-  public void draw(GL2 gl) {
+  public void draw(GL2 gl, Boolean nightMode) {
     
 	GLUT glut = new GLUT();  
-	//gl.glPushMatrix();
+
     gl.glPushAttrib(GL2.GL_LIGHTING);
-  
-    //Set position
-    //gl.glPopMatrix();
-    //gl.glLoadIdentity();
+    
     gl.glPushMatrix();
-    System.out.println("player.x " + playerPos.x + " player.z = " + playerPos.z);
     
     gl.glTranslated(playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z) + 0.5f, playerPos.z);
-    gl.glRotated(-cameraAngle, 0, 1, 0);
+    gl.glRotated(-cameraAngle, 0, 1, 0);  
   
     gl.glFrontFace(GL2.GL_CW);
     glut.glutSolidTeapot(0.1f);

@@ -221,7 +221,7 @@ public class Terrain {
 	}
 	  
   
-  public void draw(GL2 gl, Texture terrain, Texture treeTrunk, Texture treeLeaves, Texture roads, Boolean nightMode) {
+  public void draw(GL2 gl, Texture terrain, Texture treeTrunk, Texture treeLeaves, Texture roads, Boolean nightMode, float cameraAngle, Vector playerPos) {
   	GLU glu = new GLU();
   	gl.glMatrixMode(GL2.GL_MODELVIEW);
 	gl.glPushMatrix();
@@ -239,13 +239,21 @@ public class Terrain {
     	colourOfsun[2] = 0.0f;
     }
     
+    float lightDir [] = {-cameraAngle, 0, 1, 0};
+    float lightPos [] = {(float)playerPos.x, (float)altitude(playerPos.x, playerPos.z) + 0.5f, (float)playerPos.z};
+    
+    
     if(nightMode){
     	gl.glDisable(GL2.GL_LIGHT0);
     	gl.glDisable(GL2.GL_LIGHT1);
-    	gl.glEnable(GL2.GL_LIGHT2);
-    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_POSITION, getSunlight(), 0);        
+    	gl.glEnable(GL2.GL_LIGHT2);        
     	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_AMBIENT, amb, 0);
     	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_SPECULAR, spec, 0);
+    	gl.glLightfv (GL2.GL_LIGHT2, GL2.GL_POSITION, lightPos,0);
+    	gl.glLightf (GL2.GL_LIGHT2, GL2.GL_SPOT_EXPONENT , 3.0f);
+    	gl.glLightfv (GL2.GL_LIGHT2, GL2.GL_SPOT_DIRECTION, lightDir,0);	
+    	gl.glLightf(GL2.GL_LIGHT2, GL2.GL_SPOT_CUTOFF, 35.0f);
+    	gl.glDisable(GL2.GL_LIGHT1);
     } else {
     	gl.glDisable(GL2.GL_LIGHT1);
     	gl.glDisable(GL2.GL_LIGHT2);
