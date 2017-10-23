@@ -43,18 +43,21 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 	private int shaderprogram;
 	private int shaderprogram2;
 	
-	private Vector playerPos = new Vector(3, 3);
+	private Vector playerPos = new Vector(0, 0);
 	private float playerSpeed = 1;
 	private float cameraRotStep = 4;
 	private boolean showAvatar;
 	private float cameraAngle = 0;
 	
 	private final double DEG_TO_RAD = Math.PI / 180;
+	
+	private Avatar avatar;
 
 
     public Game(Terrain terrain) {
     	super("Assignment 2");
         myTerrain = terrain;
+        avatar =  new Avatar(myTerrain, playerPos, cameraAngle);
 
         addKeyListener(this);
         setFocusable(true);
@@ -158,14 +161,19 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, s, 0);
 
 		
+        if(showAvatar){
+			System.out.println("showAvatar");
+			avatar.updatePos(playerPos, cameraAngle);
+			avatar.draw(gl);
+		}
+        
+        gl.glLoadIdentity();
+		
+        
 		gl.glColor3d(0, 0, 1);
 		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture);
 		
-		if(showAvatar){
-			System.out.println("showAvatar");
-			Avatar avatar = new Avatar(myTerrain, playerPos, cameraAngle);
-			avatar.draw(gl,showAvatar);
-		}
+		gl.glLoadIdentity();
 		
 		for (Road r : myTerrain.roads()) {
 			gl.glBegin(GL2.GL_TRIANGLE_STRIP);

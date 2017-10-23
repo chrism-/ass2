@@ -14,17 +14,24 @@ public class Avatar {
     this.cameraAngle = cameraAngle;
   }
   
-  public void draw(GL2 gl, boolean thirdPerson) {
+  public void updatePos(Vector playerPos, float cameraAngle) {
+	  this.playerPos = playerPos;
+	  this.cameraAngle = cameraAngle;
+	  
+  }
+  
+  public void draw(GL2 gl) {
     
 	GLUT glut = new GLUT();  
-	gl.glPushMatrix();
+	//gl.glPushMatrix();
     gl.glPushAttrib(GL2.GL_LIGHTING);
   
     //Set position
-    gl.glPushMatrix();
+    //gl.glPopMatrix();
+    gl.glLoadIdentity();
     System.out.println("player.x " + playerPos.x + " player.z = " + playerPos.z);
     gl.glRotated(cameraAngle, 0, 1, 0);
-    gl.glTranslated(-playerPos.x, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.08f, -playerPos.z);
+    gl.glTranslated(playerPos.x, myTerrain.altitude(playerPos.x, playerPos.z) - 0.01f, playerPos.z);
   
     gl.glFrontFace(GL2.GL_CW);
     glut.glutSolidTeapot(0.1f);
