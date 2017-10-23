@@ -137,8 +137,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 //    	    System.out.println("zOffset = " + zOffset);
     	}
     	
-    	//System.out.println(cameraAngle);
-    	
     	gl.glRotatef(cameraAngle, 0.0f, 1.0f, 0.0f);
     	gl.glTranslated(-playerPos.x -xOffset, -myTerrain.altitude(playerPos.x, playerPos.z) - 0.5, -playerPos.z - zOffset);
     	
@@ -146,19 +144,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	gl.glMatrixMode(GL2.GL_MODELVIEW);
     	gl.glLoadIdentity();
-    	
-    	
-    	
-    	
-    	// rotate the light
-    	
-    	
-        
-        
-        //gl.glPushMatrix();
-        //gl.glLoadIdentity();
-        //gl.glRotated(0, 1, 0, 0);
-        //gl.glRotated(0, 0, 1, 0);
+
       
         
         float[] pos = new float[] { 10.0f, 10.0f, 10.0f, 1.0f };
@@ -182,15 +168,14 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         
         
         
-        //gl.glLoadIdentity();
-        
+        //render avatar
         if(showAvatar){
 			avatar.updatePos(playerPos, cameraAngle);
 			avatar.draw(gl,nightMode);
         }
 		
         
-		//gl.glColor3d(0, 0, 1);
+        //render terrain, trees and roads
 		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture, nightMode, cameraAngle, playerPos);
 
 	}
@@ -219,6 +204,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         gl.glEnable(GL2.GL_NORMALIZE);
         gl.glEnable(GL2.GL_TEXTURE_2D);
         try {
+        	//load textures
         	this.terrainTexture = TextureIO.newTexture(new File("grass.jpg"), true);
         	this.treeTrunkTexture = TextureIO.newTexture(new File("trunk.jpg"), true);
         	this.treeLeavesTexture = TextureIO.newTexture(new File("leaf.jpg"), true);
@@ -260,30 +246,35 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	switch (ev.getKeyCode()) {
     	case KeyEvent.VK_UP:
+    		//move positon up
     		x = playerSpeed * Math.cos(Math.toRadians(cameraAngle + 90));
     		y = playerSpeed * Math.sin(Math.toRadians(cameraAngle + 90));
     		
     		playerPos = myTerrain.clip(playerPos.add(new Vector (-x, -y)));
     		break;
     	case KeyEvent.VK_DOWN:
+    		//move position down
     		x = playerSpeed * Math.cos(Math.toRadians(cameraAngle + 90));
     		y = playerSpeed * Math.sin(Math.toRadians(cameraAngle + 90));
     		
     		playerPos = myTerrain.clip(playerPos.sub(new Vector (-x, -y)));
     		break;
     	case KeyEvent.VK_LEFT:
-    		
+    		//rotate camera left
     		cameraAngle -= cameraRotStep;
     		if (cameraAngle < 0.0) cameraAngle += 360.0;
     		break;
     	case KeyEvent.VK_RIGHT:
+    		//rotate camera right
     		cameraAngle += cameraRotStep;
     		if (cameraAngle > 360.0) cameraAngle -= 360.0;
     		break;
     	case KeyEvent.VK_SPACE:
+    		//toggle third person
     		 showAvatar = !showAvatar;
 			 break;
     	case KeyEvent.VK_N:
+    		//toggle night mode
     		 nightMode = !nightMode;
     	default:
     		break;
