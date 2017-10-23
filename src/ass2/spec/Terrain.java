@@ -195,7 +195,7 @@ public class Terrain {
    * @param z
    */
   public void addRoad(double width, double[] spine) {
-      Road road = new Road(width, spine);
+      Road road = new Road(width, spine, this);
       myRoads.add(road);        
   }
   
@@ -221,7 +221,7 @@ public class Terrain {
 	}
 	  
   
-  public void draw(GL2 gl, Texture terrain, Texture treeTrunk, Texture treeLeaves) {
+  public void draw(GL2 gl, Texture terrain, Texture treeTrunk, Texture treeLeaves, Texture roads) {
   	GLU glu = new GLU();
   	gl.glMatrixMode(GL2.GL_MODELVIEW);
 	gl.glPushMatrix();
@@ -321,6 +321,10 @@ public class Terrain {
     
     for (Tree tree : myTrees) {
       tree.draw(gl, treeTrunk, treeLeaves);
+    }
+    
+    for(Road road : myRoads){
+    	road.draw(gl, roads);
     }
     
     gl.glPopAttrib();
