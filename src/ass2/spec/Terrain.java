@@ -221,7 +221,7 @@ public class Terrain {
 	}
 	  
   
-  public void draw(GL2 gl, Texture terrain, Texture treeTrunk, Texture treeLeaves, Texture roads) {
+  public void draw(GL2 gl, Texture terrain, Texture treeTrunk, Texture treeLeaves, Texture roads, Boolean nightMode) {
   	GLU glu = new GLU();
   	gl.glMatrixMode(GL2.GL_MODELVIEW);
 	gl.glPushMatrix();
@@ -239,26 +239,36 @@ public class Terrain {
     	colourOfsun[2] = 0.0f;
     }
     
-	gl.glDisable(GL2.GL_LIGHT1);
-	gl.glDisable(GL2.GL_LIGHT2);
-	gl.glEnable(GL2.GL_LIGHT0);
-    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, sunPos, 0);  
-    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, amb, 0);
-    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, colourOfsun, 0);
-    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, spec, 0);
+    if(nightMode){
+    	gl.glDisable(GL2.GL_LIGHT0);
+    	gl.glDisable(GL2.GL_LIGHT1);
+    	gl.glEnable(GL2.GL_LIGHT2);
+    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_POSITION, getSunlight(), 0);        
+    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_AMBIENT, amb, 0);
+    	gl.glLightfv(GL2.GL_LIGHT2, GL2.GL_SPECULAR, spec, 0);
+    } else {
+    	gl.glDisable(GL2.GL_LIGHT1);
+    	gl.glDisable(GL2.GL_LIGHT2);
+    	gl.glEnable(GL2.GL_LIGHT0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, sunPos, 0);  
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, amb, 0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, colourOfsun, 0);
+        gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, spec, 0);
+        
+        gl.glPushMatrix();  
+        gl.glTranslatef(sunPos[0], sunPos[1], sunPos[2]);
+        gl.glEnable(GL2.GL_TEXTURE_GEN_S); 
+        gl.glEnable(GL2.GL_TEXTURE_GEN_T);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, 6);
+        GLUquadric gluQ = glu.gluNewQuadric();
+        glu.gluQuadricTexture(gluQ, true);
+        glu.gluQuadricNormals(gluQ, GLU.GLU_SMOOTH);
+        glu.gluSphere(gluQ, 0.25f, 60, 60);
+        gl.glDisable(GL2.GL_TEXTURE_GEN_S); 
+        gl.glDisable(GL2.GL_TEXTURE_GEN_T);
+        gl.glPopMatrix();
+    }
     
-    gl.glPushMatrix();  
-    gl.glTranslatef(sunPos[0], sunPos[1], sunPos[2]);
-    gl.glEnable(GL2.GL_TEXTURE_GEN_S); 
-    gl.glEnable(GL2.GL_TEXTURE_GEN_T);
-    gl.glBindTexture(GL.GL_TEXTURE_2D, 6);
-    GLUquadric gluQ = glu.gluNewQuadric();
-    glu.gluQuadricTexture(gluQ, true);
-    glu.gluQuadricNormals(gluQ, GLU.GLU_SMOOTH);
-    glu.gluSphere(gluQ, 0.25f, 60, 60);
-    gl.glDisable(GL2.GL_TEXTURE_GEN_S); 
-    gl.glDisable(GL2.GL_TEXTURE_GEN_T);
-    gl.glPopMatrix();
     
     Texture myTerrain = terrain;
     myTerrain.enable(gl);

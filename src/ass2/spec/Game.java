@@ -50,6 +50,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 	private boolean showAvatar;
 	private float cameraAngle = 120;
 	
+	private Boolean nightMode = false;
+	
 	private final double DEG_TO_RAD = Math.PI / 180;
 	
 	private Avatar avatar;
@@ -106,8 +108,13 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
 		GL2 gl = drawable.getGL().getGL2();
 		
-		gl.glClearColor(85.0f/256.0f, 142.0f/256.0f, 234.0f/256.0f, 1);
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		if(nightMode) {
+			gl.glClearColor(0,0,0,0);
+	        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		} else {
+			gl.glClearColor(85.0f/256.0f, 142.0f/256.0f, 234.0f/256.0f, 1);
+	        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		}
     	
     	//set the camera
     	gl.glMatrixMode(GL2.GL_PROJECTION);
@@ -184,56 +191,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 		
         
 		//gl.glColor3d(0, 0, 1);
-		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture);
-		
-		//gl.glLoadIdentity();
-
-		
-        
-		
-//		gl.glLoadIdentity();
-		
-//		for (Road r : myTerrain.roads()) {
-//			gl.glBegin(GL2.GL_TRIANGLE_STRIP);
-//			System.out.println(r.size());
-//			for (double i = 0.1; i < r.size(); i+=0.01) {
-//				
-//		    		
-//		    		double[] p = r.point(i);
-//		    		//double[] tg2d = this.tangent(i);
-//		    		//double[] normal2d = new double[]{-tg2d[1],tg2d[0]};
-//		    		
-//		    		//normalize the normal
-//		    		
-////		    		double norm = normal2d[0]*normal2d[0] + normal2d[1]*normal2d[1];
-////		    		norm = Math.sqrt(norm);
-////		    		normal2d[0] /= norm;
-////		    		normal2d[1] /= norm;
-////		    		
-//		    		// Draw the points on the plane with y = h
-//		    		
-//		    		//Order matters! CCW order!
-//		    		
-//		    		
-//		    		//Little epsion in height so it isn't IN the ground, but ON
-//		    		// the ground
-//		    		double eps = 0.001;
-//		    		double w = r.width()/2;
-//		    		
-////		    		System.out.println(-w+p[0]);
-////		    		System.out.println( myTerrain.altitude(p[0], p[1]) + eps);
-////		    				System.out.println( -w+p[1]);
-//
-//		    		//gl.glNormal3d(0, 1, 0);
-//		    		//gl.glTexCoord2d(-w*normal2d[0]+p[0], -w*normal2d[1] + p[1]); 
-//		    		gl.glVertex3d(-w+p[0], myTerrain.altitude(p[0], p[1]) + eps, -w+p[1]);
-//		    		//gl.glTexCoord2d(w*normal2d[0]+p[0], w*normal2d[1] + p[1]); 
-//		    		gl.glVertex3d(w+p[0], myTerrain.altitude(p[0], p[1]) + eps, w+p[1]);
-//		    	
-//		    	
-//			}
-//			gl.glEnd();
-		//}
+		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture, nightMode);
 
 	}
 
@@ -263,7 +221,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         try {
         	this.terrainTexture = TextureIO.newTexture(new File("grass.jpg"), true);
         	this.treeTrunkTexture = TextureIO.newTexture(new File("trunk.jpg"), true);
-        	this.treeLeavesTexture = TextureIO.newTexture(new File("leaves.jpg"), true);
+        	this.treeLeavesTexture = TextureIO.newTexture(new File("leaf.jpg"), true);
         	this.roadTexture = TextureIO.newTexture(new File("roads.jpg"), true);
         } catch (IOException e){
         	e.printStackTrace();
@@ -325,6 +283,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	case KeyEvent.VK_SPACE:
     		 showAvatar = !showAvatar;
 			 break;
+    	case KeyEvent.VK_N:
+    		 nightMode = !nightMode;
     	default:
     		break;
     	}
