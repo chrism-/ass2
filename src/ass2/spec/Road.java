@@ -156,6 +156,7 @@ public class Road {
     throw new IllegalArgumentException("" + i);
   }
   
+  //divide by magnitude to find unit vector
   public static double [] unitVectorCalc(double[] u) {
 	    double unitVector[] = new double[4];
 	    
@@ -168,6 +169,7 @@ public class Road {
 	    return unitVector;
 	  }
   
+  //calc the cross product between two vectors
   public static double [] crossProduct(double u [], double v[]){
 	    double crossProduct[] = new double[3];
 	    crossProduct[0] = u[1]*v[2] - u[2]*v[1];
@@ -176,7 +178,7 @@ public class Road {
 	    
 	    return crossProduct;
 	  }
-  
+  //multiply a vector a matrix together
   public static double[] mult(double[][] m, double[] v) {
 	    
 	    double[] u = new double[4];
@@ -190,7 +192,7 @@ public class Road {
 	    
 	    return u;
 	  }
-  
+  //scale the matrix
   public static double[][] scaleMatrix(double scale) {
 	    double[][] m = {
 	      {scale, 0, 0, 0},
@@ -206,14 +208,17 @@ public class Road {
     gl.glPushMatrix();
     gl.glPushAttrib(GL2.GL_LIGHTING);
     
+    //how many quads to divide road into and calc the distance of the road
     double quad = (myPoints.size() / 6.0) / 100;
-    double roadDistance = (myPoints.size() / 6.0) - (1.0/3.0) - (2 * quad);
+    double distance = (myPoints.size() / 6.0) - (1.0/3.0) - (2 * quad);
     double initialAlt = this.terrain.altitude(point(0.0)[0], point(0.0)[1]) + ALTITUDE_OFFSET;
     
+    //setup textures for road
     road.enable(gl);
     road.bind(gl);
     TextureCoords textureCoords = road.getImageTexCoords();
     
+    //set material for road
     float[] amb = {0.2f, 0.2f, 0.2f, 1.0f};
     float[] dif = {0.4f, 0.4f, 0.4f, 1.0f};
     float[] spec = {0.5f, 0.5f, 0.5f, 1.0f};
@@ -224,30 +229,32 @@ public class Road {
     
     gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
     
-    for (double r = 0; r < roadDistance; r += quad) {
-
+    for (double r = 0; r < distance; r += quad) {
+    //get current point
       double[] currPoint = point(r);
       double[] currPV = {currPoint[0], initialAlt, currPoint[1]};
-
+      //get the next point
       double[] nextPoint = point(r + quad);
       double[] nextPV = {nextPoint[0], initialAlt, nextPoint[1]};
-      
+      //get the point after next point
       double[] thirdPoint = point(r + (2 * quad));
-  
+  //obtain line between points
       double[] currentToNextLine = {nextPoint[0] - currPoint[0], 0, nextPoint[1] - currPoint[1], 1};
       double[] nextToThirdLine = {thirdPoint[0] - nextPoint[0], 0, thirdPoint[1] - nextPoint[1], 1};
   
-      
+      //calc the perp of these vectors
       double[] normVec = {0, 1, 0, 1};
   
       double[] currentToNext = mult(scaleMatrix(myWidth / 2), unitVectorCalc(crossProduct(normVec, currentToNextLine)));
       double[] nextToThird = mult(scaleMatrix(myWidth / 2), unitVectorCalc(crossProduct(normVec, nextToThirdLine)));
-  
+      
+      //scale the vectors to the width provided
       double[] currLeft = {currPV[0] - currentToNext[0], currPV[1] - currentToNext[1], currPV[2] - currentToNext[2]};
       double[] currRight = {currPV[0] + currentToNext[0], currPV[1] + currentToNext[1], currPV[2] + currentToNext[2]};
       double[] nextLeft = {nextPV[0] - nextToThird[0], nextPV[1] - nextToThird[1], nextPV[2] - nextToThird[2]};
       double[] nextRight = {nextPV[0] + nextToThird[0], nextPV[1] + nextToThird[1], nextPV[2] + nextToThird[2]};
       
+      //vertexes that will draw the road
       float leftCoord = textureCoords.left(); 
       float rightCoord = textureCoords.right();
       float bottomCoord = textureCoords.bottom();
@@ -255,7 +262,7 @@ public class Road {
       
       gl.glBegin(GL2.GL_TRIANGLE_STRIP);
       {
-        
+        //render the first triangle
         double[] currLeftText = {leftCoord, bottomCoord};
         double[] currRightText = {rightCoord, leftCoord};
         double[] nextRightTexture = {leftCoord, topCoord};
@@ -271,7 +278,7 @@ public class Road {
       
       gl.glBegin(GL2.GL_TRIANGLE_STRIP);
       {
-  
+    	  //render the second triangle
         double[] currLeftText = {leftCoord, bottomCoord};
         double[] nextRightTexture = {leftCoord, topCoord};
         double[] nextLeftTexture = {rightCoord, topCoord};
