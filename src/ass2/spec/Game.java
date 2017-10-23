@@ -31,6 +31,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     private Texture terrainTexture;
     private Texture treeTrunkTexture;
     private Texture treeLeavesTexture;
+    private Texture roadTexture;
     
     private static final String VERTEX_SHADER = "resources/PhongVertex.glsl";
     private static final String FRAGMENT_SHADER = "resources/PhongFragment.glsl";
@@ -119,6 +120,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	double xOffset = 0;
     	double zOffset = 0;
     	
+    	
+    	
     	if(showAvatar){
     		altAvatar = 1;
     		xOffset = Math.cos(Math.toRadians(cameraAngle));
@@ -133,7 +136,9 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 
     	
     	// rotate the light
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
+    	
+    	gl.glMatrixMode(GL2.GL_MODELVIEW);
+        
         
         //gl.glPushMatrix();
         //gl.glLoadIdentity();
@@ -171,6 +176,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 		
         
 		gl.glColor3d(0, 0, 1);
+		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture);
 		
 		gl.glLoadIdentity();
 		
@@ -245,6 +251,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         	this.terrainTexture = TextureIO.newTexture(new File("grass.jpg"), true);
         	this.treeTrunkTexture = TextureIO.newTexture(new File("trunk.jpg"), true);
         	this.treeLeavesTexture = TextureIO.newTexture(new File("leaves.jpg"), true);
+        	this.roadTexture = TextureIO.newTexture(new File("roads.png"), true);
         } catch (IOException e){
         	e.printStackTrace();
         }
