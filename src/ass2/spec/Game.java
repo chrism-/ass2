@@ -171,7 +171,6 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
 		
         
 		gl.glColor3d(0, 0, 1);
-		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture);
 		
 		gl.glLoadIdentity();
 		
