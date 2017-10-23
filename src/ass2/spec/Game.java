@@ -116,7 +116,7 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
     	
     	
     	GLU glu = new GLU();
-    	glu.gluPerspective(70, 2, 0.1, 50);
+    	glu.gluPerspective(70, 2, 0.1, 20);
     	
     	double altAvatar = 0;
     	double xOffset = 0;
@@ -149,8 +149,8 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         
         //gl.glPushMatrix();
         //gl.glLoadIdentity();
-        gl.glRotated(0, 1, 0, 0);
-        gl.glRotated(0, 0, 1, 0);
+        //gl.glRotated(0, 1, 0, 0);
+        //gl.glRotated(0, 0, 1, 0);
       
         
         float[] pos = new float[] { 10.0f, 10.0f, 10.0f, 1.0f };
@@ -171,18 +171,24 @@ public class Game extends JFrame implements GLEventListener, KeyListener{
         s[0] = s[1] = s[2] = 1;
         s[3] = 1.0f;
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, s, 0);
-
-		
+        
+        
+        
+        //gl.glLoadIdentity();
+        
         if(showAvatar){
 			avatar.updatePos(playerPos, cameraAngle);
 			avatar.draw(gl);
 		}
-        
-//        gl.glLoadIdentity();
 		
         
-		gl.glColor3d(0, 0, 1);
+		//gl.glColor3d(0, 0, 1);
 		myTerrain.draw(gl, this.terrainTexture, this.treeTrunkTexture, this.treeLeavesTexture, this.roadTexture);
+		
+		//gl.glLoadIdentity();
+
+		
+        
 		
 //		gl.glLoadIdentity();
 		
